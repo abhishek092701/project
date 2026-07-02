@@ -82,7 +82,7 @@ void addContact()
         		if(strcmp(C[count].phone, C[i].phone) == 0)
         		{
             		valid=0;
-            		printf("                        Phone number already exists!\n\n");
+            		printf("\n\n								Phone number already exists!\n\n");
             		break;
         		}
     		}
@@ -128,7 +128,7 @@ void addContact()
         		if(strcmp(C[count].email,C[i].email) == 0)
         		{
             		Valid=0;
-            		printf("\n                        Email already exists!\n\n");
+            		printf("\n\n								Email already exists!\n\n");
             		break;
         		}
     		}
@@ -242,7 +242,7 @@ void searchContact()
 void editContact()
 {
     int searchId;
-    int i;
+    int valids,i;
     if(count==0)
     {
         printf("\n								No Contacts Available!\n\n");
@@ -255,19 +255,169 @@ void editContact()
     {
         if(C[i].id==searchId)
         {
-        	fflush(stdin);
-        	printf("								Enter New Name    : ");
-			gets(C[i].name);
-        	fflush(stdin);
-            printf("								Enter New Phone   : ");
-            gets(C[i].phone);
-            fflush(stdin);
-            printf("								Enter New Email   : ");
-            gets(C[i].email);
-            fflush(stdin);
-            printf("								Enter New Address : ");
-    		gets(C[i].address);
+    	do
+    	{
+    		valids=1;
+    		fflush(stdin);
+    		printf("\n\n								Enter New Name    : ");
+    		gets(C[count].name);
+    		if(strlen(C[count].name)==0)
+    		{
+    			valids=0;
+			}
+			for(i=0; C[count].name[i] != '\0'; i++)
+			{
+				if(!((C[count].name[i] >= 'A' && C[count].name[i] <= 'Z') ||
+				(C[count].name[i] >= 'a' && C[count].name[i] <= 'z') ||
+				C[count].name[i]== ' '))
+				{
+					valids=0;
+					break;
+				}
+			}
+			if(!valids)
+			{
+				printf("\n						Invalid Name! Use only alphabets and spaces.\n\n");
+			}
+		}while(!valids);
+		fflush(stdin);
+
+		int len,valid;
+		do
+		{
+    		valid=1;
+    		printf("								Enter New Phone   : ");
+    		scanf("%s", C[count].phone);
+    		len=strlen(C[count].phone);
+    		if(len!=10)
+    		{
+        		valid=0;
+    		}
+    		for(i=0; i<len; i++)
+    		{
+        		if(C[count].phone[i] < '0' || C[count].phone[i] > '9')
+        		{
+        			valid=0;
+            		break;
+        		}
+    		}
+    		if(valid)
+    		{
+        		if(!((C[count].phone[0] == '9') && (C[count].phone[1] == '8' || C[count].phone[1] == '7')))
+        		{
+            		valid=0;
+        		}
+    		}
+    		if(valid)
+			{
+    			for(i=0; i<count; i++)
+    			{
+        			if(strcmp(C[count].phone, C[i].phone) == 0)
+        			{
+            			valid=0;
+            			printf("\n\n								Phone number already exists!\n\n");
+            			break;
+        			}
+    			}
+			}
+    		if(!valid)
+    		{
+        		printf("						Invalid phone number! Enter a valid 10-digit number starting with 98 or 97.\n\n");
+    		}
+		} while(!valid);
+
+    	fflush(stdin);
+		int Valid;
+		do
+		{
+    		Valid=1;
+    		printf("								Enter New Email   : ");
+    		scanf("%s", C[count].email);
+    		if(strstr(C[count].email, "@gmail.com") == NULL)
+    		{
+        		Valid=0;
+    		}
+    		if(C[count].email[0] == '@')
+    		{
+        		Valid=0;
+    		}
+    		if(!((C[count].email[0] >= 'a' && C[count].email[0] <= 'z')))
+			{
+    			Valid=0;
+			}
+			for(i=0; C[count].email[i] != '\0' && C[count].email[i] != '@'; i++)
+			{
+    			if(!((C[count].email[i] >= 'a' && C[count].email[i] <= 'z') ||
+         			(C[count].email[i] >= '0' && C[count].email[i] <= '9')))
+    				{
+        				Valid=0;
+        				break;
+    				}
+			}
+			if(Valid)
+			{
+    			for(i=0; i<count; i++)
+    			{
+        			if(strcmp(C[count].email,C[i].email) == 0)
+        			{
+            			Valid=0;
+            			printf("\n\n								Email already exists!\n\n");
+            			break;
+        			}
+    			}
+			}
+    		if(!Valid)
+    		{
+        		printf("\n						Invalid Email! Enter like username@gmail.com\n\n");
+    		}
+		}while(!Valid);
+
+    	fflush(stdin);
+    	int Valids,comma=0;
+    	do
+    	{
+    		Valids=1;
+    		comma=0;
+    		fflush(stdin);
+    		printf("								Enter New Address : ");
+    		gets(C[count].address);
+    		if(strlen(C[count].address)==0)
+    		{
+    			Valids=0;
+			}
+			for(i=0; C[count].address[i] != '\0'; i++)
+			{
+				if(C[count].address[i] == ',')
+        		{
+            		comma++;
+        		}
+				if(!((C[count].address[i] >= 'A' && C[count].address[i] <= 'Z') ||
+				(C[count].address[i] >= 'a' && C[count].address[i] <= 'z') ||
+				C[count].address[i]== ' ' || C[count].address[i] == ','))
+				{
+					Valids=0;
+					break;
+				}
+			}
+			if(comma!=1)
+    		{
+        		Valids=0;
+    		}
+    		if(C[count].address[0] == ',')
+    		{
+        		Valids=0;
+    		}
+    		if(C[count].address[strlen(C[count].address)-1] == ',')
+    		{
+        		Valids=0;
+    		}
+    		if(!Valids)
+    		{
+        		printf("\n						Invalid Address! Use like(City/Country/District, District/Country/City)\n\n");
+    		}
+			}while(!Valids);
 			fflush(stdin);
+			saveContacts();
             printf("\n								Contact Updated Successfully!\n\n");
             return;
         }
@@ -395,13 +545,20 @@ void freeMemory()
 }
 int main()
 {
-	system("color 4e");
-	system("cls");
+	HANDLE h=GetStdHandle(STD_OUTPUT_HANDLE);
     int choice;
+    system("color 2F");
     loadContacts();
     do
     {
-        printf("\n      									PHONE BOOK     \n\n");
+    	system("cls");
+		SetConsoleTextAttribute(h,
+    		BACKGROUND_GREEN |
+    		FOREGROUND_RED |
+    		FOREGROUND_INTENSITY);
+        printf("\n      							DYNAMIC PHONE BOOK / CONTACT MANAGER     \n\n");
+        SetConsoleTextAttribute(h,
+            BACKGROUND_GREEN);
         printf("								1.Add Contact\n");
         printf("								2.Display Contacts\n");
         printf("								3.Search Contact (By ID)\n");
@@ -412,55 +569,46 @@ int main()
         printf("								8.Exit\n\n");
         printf("								Enter Your Choice: ");
         scanf("%d", &choice);
-        system("cls");
         switch(choice)
         {
             case 1:
                 addContact();
                 system("pause");
-                system("cls");
                 break;
 
             case 2:
                 displayContacts();
                 system("pause");
-                system("cls");
                 break;
 
             case 3:
                 searchContact();
                 system("pause");
-                system("cls");
                 break;
 
             case 4:
                 editContact();
                 system("pause");
-                system("cls");
                 break;
 
             case 5:
                 deleteContact();
                 system("pause");
-                system("cls");
                 break;
 
             case 6:
                 sortContacts();
                 system("pause");
-                system("cls");
                 break;
 
             case 7:
                 saveContacts();
                 system("pause");
-                system("cls");
                 break;
 
             case 8:
                 saveContacts();
                 system("pause");
-                system("cls");
                 freeMemory();
                 printf("\n								Thank You for Using Phone Book!\n\n");
                 break;
