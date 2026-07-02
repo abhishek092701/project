@@ -13,6 +13,7 @@ struct contact
 
 struct contact *C=NULL;
 int count=0;
+void saveContacts();
 int nextId=1;
 
 void addContact()
@@ -74,6 +75,18 @@ void addContact()
             	valid=0;
         	}
     	}
+        if(valid)
+		{
+    		for(i=0; i<count; i++)
+    		{
+        		if(strcmp(C[count].phone, C[i].phone) == 0)
+        		{
+            		valid=0;
+            		printf("                        Phone number already exists!\n\n");
+            		break;
+        		}
+    		}
+		}
     	if(!valid)
     	{
         	printf("						Invalid phone number! Enter a valid 10-digit number starting with 98 or 97.\n\n");
@@ -107,6 +120,18 @@ void addContact()
         			Valid=0;
         			break;
     			}
+		}
+        if(Valid)
+		{
+    		for(i=0; i<count; i++)
+    		{
+        		if(strcmp(C[count].email,C[i].email) == 0)
+        		{
+            		Valid=0;
+            		printf("\n                        Email already exists!\n\n");
+            		break;
+        		}
+    		}
 		}
     	if(!Valid)
     	{
@@ -172,7 +197,7 @@ void displayContacts()
         printf("\n								No Contacts Available!\n\n");
         return;
     }
-    printf("\n        								CONTACT LIST        \n");
+    printf("\n\n\n        							CONTACT LIST        \n");
     for(i=0; i<count; i++)
     {
         printf("\n								Contact %d\n", i+1);
@@ -264,16 +289,27 @@ void deleteContact()
     for(i=0; i<count; i++)
     {
         if(C[i].id==searchId)
-        {
-            for(j=i; j<count-1; j++)
-            {
-                C[j]=C[j+1];
-            }
-            count--;
-            C=(struct contact *)realloc(C,count*sizeof(struct contact));
-            printf("\n								Contact Deleted Successfully!\n\n");
-            return;
-        }
+		{
+    		char confirm;
+    		printf("\n");
+    		printf("                                Are you sure you want to delete this contact? (Y/N): ");
+    		scanf(" %c", &confirm);
+    		if(confirm=='Y' || confirm=='y')
+    		{
+        		for(j=i; j<count-1; j++)
+        		{
+            		C[j]=C[j+1];
+        		}
+				count--;
+				C=(struct contact *)realloc(C, count*sizeof(struct contact));
+				printf("\n                                Contact Deleted Successfully!\n\n");
+    		}
+    		else
+    		{
+        		printf("\n                                Deletion Cancelled!\n\n");
+    		}
+			return;
+		}
     }
     printf("\n								Contact Not Found!\n\n");
 }
