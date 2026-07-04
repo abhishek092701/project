@@ -140,10 +140,10 @@ void deleteAccount()
         system("pause");
         return;
     }
-    char choice;
     do
     {
-    	printf("\n								Are you sure you want to delete your account? (Y/N): \n");
+    	char choice;
+    	printf("\n								Are you sure you want to delete your account? (Y/N): ");
     	scanf(" %c",&choice);
     	if(choice=='Y' || choice=='y')
     	{
@@ -161,6 +161,8 @@ void deleteAccount()
     	else if(choice=='N' || choice=='n')
     	{
         	printf("\n									Account Deletion Cancelled.\n");
+        	system("pause");
+        	return;
     	}
     	else
     	{
