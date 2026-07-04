@@ -401,21 +401,28 @@ void addContact()
 
 void displayContacts()
 {
+	HANDLE h=GetStdHandle(STD_OUTPUT_HANDLE);
     int i;
     if(count==0)
     {
         printf("\n								No Contacts Available!\n\n");
         return;
     }
-    printf("\n\n\n        							CONTACT LIST        \n");
+    SetConsoleTextAttribute(h,
+    BACKGROUND_GREEN |
+    FOREGROUND_RED |
+    FOREGROUND_INTENSITY);
+    printf("\n\n\n        								CONTACT LISTS        \n");
+    SetConsoleTextAttribute(h,
+    BACKGROUND_GREEN |
+    FOREGROUND_BLUE |
+    FOREGROUND_INTENSITY);
+    printf("\n					%-6s %-25s %-15s %-35s %-30s\n","ID", "NAME", "PHONE", "EMAIL", "ADDRESS\n");
+    SetConsoleTextAttribute(h,
+    BACKGROUND_GREEN);  
     for(i=0; i<count; i++)
     {
-        printf("\n								Contact %d\n", i+1);
-        printf("								ID      : %d\n", C[i].id);
-        printf("								Name    : %s\n", C[i].name);
-        printf("								Phone   : %s\n", C[i].phone);
-        printf("								Email   : %s\n", C[i].email);
-        printf("								Address : %s\n", C[i].address);
+        printf("					%-6d %-25s %-15s %-35s %-30s\n",C[i].id,C[i].name,C[i].phone,C[i].email,C[i].address);
     }
 }
 void searchContact()
