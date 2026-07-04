@@ -656,7 +656,7 @@ void deleteContact()
 		{
     		char confirm;
     		printf("\n");
-    		printf("                                Are you sure you want to delete this contact? (Y/N): ");
+    		printf("                                			Are you sure you want to delete this contact? (Y/N): ");
     		scanf(" %c", &confirm);
     		if(confirm=='Y' || confirm=='y')
     		{
@@ -666,12 +666,13 @@ void deleteContact()
         		}
 				count--;
 				C=(struct contact *)realloc(C, count*sizeof(struct contact));
-				printf("\n                                Contact Deleted Successfully!\n\n");
+				printf("\n                                				Contact Deleted Successfully!\n\n");
     		}
     		else
     		{
-        		printf("\n                                Deletion Cancelled!\n\n");
+        		printf("\n                                				Deletion Cancelled!\n\n");
     		}
+    		saveContacts();
 			return;
 		}
     }
