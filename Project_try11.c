@@ -2,6 +2,19 @@
 #include<stdlib.h>
 #include<string.h>
 #include<windows.h>
+
+struct user
+{
+	char username[30];
+	char password[30];
+};
+
+int accountExists();
+int validUsername(char username[]);
+int validPassword(char password[]);
+void deleteAccount();
+void signup();
+
 struct contact
 {
 	int id;
@@ -16,6 +29,194 @@ int count=0;
 void saveContacts();
 int nextId=1;
 
+int accountExists()
+{
+    FILE *fp;
+    fp = fopen("D:\\LOQ\\login.bin1","rb");
+    if(fp==NULL)
+    {
+        return 0;
+	}
+    fclose(fp);
+    return 1;
+}
+
+int login()
+{
+    FILE *fp;
+    if(!accountExists())
+	{
+    	printf("\n									No account found.");
+		printf("Please SignUp First.\n");
+		system("pause");
+    	return 0;
+	}
+	struct user u;
+	char username[30], password[30];
+		
+    fp=fopen("D:\\LOQ\\login.bin1", "rb");
+	printf("\n\n									Enter Username : ");
+	scanf("%s", username);
+	printf("									Enter Password : ");
+	scanf("%s", password);
+	fread(&u, sizeof(struct user), 1, fp);
+	fclose(fp);
+	if(strcmp(username,u.username)==0 &&
+   		strcmp(password,u.password)==0)
+		{
+    		printf("\n								Login Successful!\n");
+    		return 1;
+		}
+	printf("\n									Invalid Username or Password!\n");
+	system("pause");
+	return 0;
+}
+
+int validUsername(char username[])
+{
+    int i;
+    if(strlen(username)<4 || strlen(username)>20)
+    {
+        return 0;    	
+	}
+    if(!((username[0]>='A' && username[0]<='Z') ||
+         (username[0]>='a' && username[0]<='z')))
+         {
+        	return 0;         	
+		 }
+    for(i=0; username[i]!='\0'; i++)
+    {
+        if(!((username[i]>='A' && username[i]<='Z') ||
+             (username[i]>='a' && username[i]<='z') ||
+             (username[i]>='0' && username[i]<='9') ||
+             username[i]=='_'))
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+int validPassword(char password[])
+{
+    int i;
+    int upper=0, lower=0, digit=0, special=0;
+    if(strlen(password)<8)
+    {
+        return 0;    	
+	}
+    for(i=0; password[i]!='\0'; i++)
+    {
+        if(password[i]>='A' && password[i]<='Z')
+        {
+            upper=1;        	
+		}
+        else if(password[i]>='a' && password[i]<='z')
+        {
+            lower=1;        	
+		}
+        else if(password[i]>='0' && password[i]<='9')
+        {
+            digit=1;        	
+		}
+        else
+        {
+            special=1;        	
+		}
+    }
+    if(upper && lower && digit && special)
+    {
+        return 1;    	
+	}
+    return 0;
+}
+
+void deleteAccount()
+{
+	int i;
+	if(!accountExists())
+    {
+        printf("\n									No account found!\n");
+        system("pause");
+        return;
+    }
+    char choice;
+    do
+    {
+    	printf("\n								Are you sure you want to delete your account? (Y/N): \n");
+    	scanf(" %c",&choice);
+    	if(choice=='Y' || choice=='y')
+    	{
+        	if(remove("D:\\LOQ\\login.bin1")==0)
+        	{
+            	printf("\n								Account Deleted Successfully!\n");
+        	}
+        	else
+        	{
+            	printf("\n								Unable to delete account!\n");
+        	}
+        	system("pause");
+        	return;
+    	}
+    	else if(choice=='N' || choice=='n')
+    	{
+        	printf("\n									Account Deletion Cancelled.\n");
+    	}
+    	else
+    	{
+        	printf("\n								Invalid Choice!\n");
+    	}
+	}while(1);
+    system("pause");
+}
+
+void signup()
+{
+    struct user u;
+    FILE *fp;
+	if(accountExists())
+	{
+    	printf("\n										An account already exists.\n");
+    	printf("								Please login or delete the existing account first.\n");
+    	system("pause");
+    	return;
+	}
+	fp=fopen("D:\\LOQ\\login.bin1","wb");
+	do
+	{
+    	printf("\n\n									Enter Username : ");
+    	scanf("%s",u.username);
+    	if(!validUsername(u.username))
+    	{
+        	printf("\n\n									Invalid Username!\n"); 
+			printf("									Please Enter following Category:\n");
+        	printf("										- 4 to 20 characters\n");
+        	printf("										- First character must be a letter\n");
+        	printf("										- Only letters, numbers and underscore (_) are allowed\n\n");   		
+		}
+	}while(!validUsername(u.username));
+	do
+	{
+    	printf("									Enter Password : ");
+    	scanf("%s",u.password);
+		if(!validPassword(u.password))
+		{
+        	printf("\n\n									Invalid Password!\n\n");
+			printf("									Please Enter following Category:\n");
+        	printf("										- Minimum 8 characters\n");
+        	printf("										- At least one uppercase letter\n");
+        	printf("										- At least one lowercase letter\n");
+        	printf("										- At least one number\n");
+        	printf("										- At least one special character\n\n");			
+		}
+	}while(!validPassword(u.password));
+	fwrite(&u, sizeof(struct user), 1, fp);
+	fclose(fp);
+	printf("\n									Account Created Successfully!\n");
+	printf("\n									Please Login from the Login Menu.\n");
+	system("pause");
+}
+
 void addContact()
 {
 
@@ -28,6 +229,7 @@ void addContact()
     	fflush(stdin);
     	printf("\n								Enter Name    : ");
     	gets(C[count].name);
+    	fflush(stdin);
     	if(strlen(C[count].name)==0)
     	{
     		valids=0;
@@ -53,8 +255,10 @@ void addContact()
 	do
 	{
     	valid=1;
+    	fflush(stdin);
     	printf("								Enter Phone   : ");
     	scanf("%s", C[count].phone);
+    	fflush(stdin);
     	len=strlen(C[count].phone);
     	if(len!=10)
     	{
@@ -98,8 +302,10 @@ void addContact()
 	do
 	{
     	Valid=1;
+    	fflush(stdin);
     	printf("								Enter Email   : ");
     	scanf("%s", C[count].email);
+    	fflush(stdin);
     	if(strstr(C[count].email, "@gmail.com") == NULL)
     	{
         	Valid=0;
@@ -148,6 +354,7 @@ void addContact()
     	fflush(stdin);
     	printf("								Enter Address : ");
     	gets(C[count].address);
+    	fflush(stdin);
     	if(strlen(C[count].address)==0)
     	{
     		Valids=0;
@@ -187,6 +394,7 @@ void addContact()
     fflush(stdin);
     count++;
     printf("\n								Contact Added Successfully!\n\n");
+    saveContacts();
 }
 
 void displayContacts()
@@ -261,6 +469,7 @@ void editContact()
     		fflush(stdin);
     		printf("\n\n								Enter New Name    : ");
     		gets(C[count].name);
+    		fflush(stdin);
     		if(strlen(C[count].name)==0)
     		{
     			valids=0;
@@ -286,8 +495,10 @@ void editContact()
 		do
 		{
     		valid=1;
+    		fflush(stdin);
     		printf("								Enter New Phone   : ");
     		scanf("%s", C[count].phone);
+    		fflush(stdin);
     		len=strlen(C[count].phone);
     		if(len!=10)
     		{
@@ -331,8 +542,10 @@ void editContact()
 		do
 		{
     		Valid=1;
+    		fflush(stdin);
     		printf("								Enter New Email   : ");
     		scanf("%s", C[count].email);
+    		fflush(stdin);
     		if(strstr(C[count].email, "@gmail.com") == NULL)
     		{
         		Valid=0;
@@ -381,6 +594,7 @@ void editContact()
     		fflush(stdin);
     		printf("								Enter New Address : ");
     		gets(C[count].address);
+    		fflush(stdin);
     		if(strlen(C[count].address)==0)
     		{
     			Valids=0;
@@ -417,8 +631,8 @@ void editContact()
     		}
 			}while(!Valids);
 			fflush(stdin);
-			saveContacts();
             printf("\n								Contact Updated Successfully!\n\n");
+			saveContacts();            
             return;
         }
     }
@@ -485,11 +699,6 @@ void sortContacts()
             }
         }
     }
-    for(i=0; i<count; i++)
-    {
-        C[i].id=i+1;
-    }
-    nextId=count+1;
     printf("\n								Contacts Sorted Alphabetically!\n\n");
 }
 
@@ -547,6 +756,57 @@ int main()
 {
 	HANDLE h=GetStdHandle(STD_OUTPUT_HANDLE);
     int choice;
+    int loging=0;
+	while(!loging)
+	{
+    	int ch;
+    	system("color 0F"); 
+    	system("cls");
+    	SetConsoleTextAttribute(h, 1); 
+    	//SetConsoleTextAttribute(h, 4); //(for Red)  
+    	printf("\n									LOGIN SYSTEM				\n\n");
+    	SetConsoleTextAttribute(h, 15);
+    	printf("									1. Login\n");
+    	printf("									2. Sign Up\n");
+    	printf("									3. Delete Account\n");
+    	printf("									4. Exit\n"); 	
+		int check;
+		do
+		{
+    		printf("\n									Enter Choice : ");
+			check=scanf("%d", &ch);
+			if(check!=1)
+    		{
+        		printf("\n							Invalid Input! Please enter numbers only.\n");
+				while(getchar()!='\n');
+    		}
+    		else if(ch<1 || ch>4)
+    		{
+        		printf("\n							Invalid Choice! Please enter between 1 and 4.\n");
+    		}
+		}while(check!=1 || ch<1 || ch>4);
+    	switch(ch)
+    	{
+        	case 1:
+            	loging=login();
+            	break;
+
+        	case 2:
+            	signup();
+            	break;
+            
+            case 3:
+            	deleteAccount();
+            	break;
+
+        	case 4:
+           		exit(0);
+
+        	default:
+            	printf("\n\n							Invalid Choice!\n");
+            	system("pause");
+    	}
+	}
     system("color 2F");
     loadContacts();
     do
@@ -565,10 +825,24 @@ int main()
         printf("								4.Edit Contact\n");
         printf("								5.Delete Contact\n");
         printf("								6.Sort Contacts\n");
-        printf("								7.Save Contacts\n");
-        printf("								8.Exit\n\n");
-        printf("								Enter Your Choice: ");
-        scanf("%d", &choice);
+        printf("								7.Exit\n\n");
+		int valid;
+		do
+		{
+    		valid=1;
+			printf("								Enter Choice : ");
+			if(scanf("%d", &choice)!= 1)
+    		{
+        		valid=0;
+				printf("\n\n							Invalid Input! Please enter numbers only.\n");
+				while(getchar()!='\n');
+    		}
+    		else if(choice<1 || choice>7)
+    		{
+        		valid=0;
+				printf("\n								Invalid Choice! Please enter between 1 and 7.\n");
+    		}
+		}while(!valid);
         switch(choice)
         {
             case 1:
@@ -602,17 +876,10 @@ int main()
                 break;
 
             case 7:
-                saveContacts();
-                system("pause");
-                break;
-
-            case 8:
-                saveContacts();
-                system("pause");
                 freeMemory();
                 printf("\n								Thank You for Using Phone Book!\n\n");
+                exit(0);
                 break;
-
             default:
                 printf("\n								Invalid Choice!\n\n");
         }
