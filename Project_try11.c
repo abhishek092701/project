@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include<conio.h>
 #include<windows.h>
 
 struct user
@@ -53,24 +54,51 @@ int login()
 	}
 	struct user u;
 	char username[30], password[30];
-		
     fp=fopen("D:\\LOQ\\login.bin1", "rb");
 	printf("\n\n									Enter Username : ");
 	scanf("%s", username);
+	char ch;
+	int i=0;
 	printf("									Enter Password : ");
-	scanf("%s", password);
+	while(1)
+	{
+    	ch=getch();
+		if(ch==13)
+    	{
+        	password[i]='\0';
+        	break;
+    	}
+    	else if(ch==8)
+    	{
+        	if(i>0)
+        	{
+            	i--;
+            	printf("\b \b");
+        	}
+    	}
+    	else
+    	{
+        	password[i]=ch;
+        	i++;
+        	printf("*");
+    	}
+	}
+	printf("\n");
 	fread(&u, sizeof(struct user), 1, fp);
 	fclose(fp);
-	if(strcmp(username,u.username)==0 &&
-   		strcmp(password,u.password)==0)
+	if(strcmp(username, u.username)==0 &&
+   		strcmp(password, u.password)==0)
 		{
-    		printf("\n								Login Successful!\n");
-    		return 1;
+    		printf("\n\n									Login Successful!\n");
+    		return 1;    		
 		}
-	printf("\n									Invalid Username or Password!\n");
-	system("pause");
-	return 0;
-}
+		else
+		{
+    		printf("\n\n									Invalid Username or Password!\n");
+    		system("pause");
+			return 0;    					    		
+		}
+	}
 
 int validUsername(char username[])
 {
