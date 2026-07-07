@@ -436,18 +436,10 @@ void displayContacts()
         printf("\n								No Contacts Available!\n\n");
         return;
     }
-    SetConsoleTextAttribute(h,
-    BACKGROUND_GREEN |
-    FOREGROUND_RED |
-    FOREGROUND_INTENSITY);
+    SetConsoleTextAttribute(h,BACKGROUND_GREEN | FOREGROUND_RED |FOREGROUND_INTENSITY);
     printf("\n\n\n        								CONTACT LISTS        \n");
-    SetConsoleTextAttribute(h,
-    BACKGROUND_GREEN |
-    FOREGROUND_BLUE |
-    FOREGROUND_INTENSITY);
-    printf("\n					%-6s %-25s %-15s %-35s %-30s\n","ID", "NAME", "PHONE", "EMAIL", "ADDRESS\n");
-    SetConsoleTextAttribute(h,
-    BACKGROUND_GREEN);  
+    SetConsoleTextAttribute(h,BACKGROUND_GREEN);
+    printf("\n					%-6s %-25s %-15s %-35s %-30s\n","ID", "NAME", "PHONE", "EMAIL", "ADDRESS\n");  
     for(i=0; i<count; i++)
     {
         printf("					%-6d %-25s %-15s %-35s %-30s\n",C[i].id,C[i].name,C[i].phone,C[i].email,C[i].address);
@@ -457,6 +449,7 @@ void searchContact()
 {
     int choice,i,found=0;
     int searchId;
+    HANDLE h=GetStdHandle(STD_OUTPUT_HANDLE);
     if(count==0)
     {
         printf("\n								No Contacts Available!\n\n");
@@ -468,7 +461,9 @@ void searchContact()
     {
         if(C[i].id==searchId)
         {
-            printf("\n								Contact Found!\n\n");
+        	SetConsoleTextAttribute(h, BACKGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+            printf("\n\n									Contact Found!\n\n");
+            SetConsoleTextAttribute(h, BACKGROUND_GREEN);
             printf("								ID      : %d\n", C[i].id);
             printf("								Name    : %s\n", C[i].name);
             printf("								Phone   : %s\n", C[i].phone);
@@ -850,13 +845,9 @@ int main()
     do
     {
     	system("cls");
-		SetConsoleTextAttribute(h,
-    		BACKGROUND_GREEN |
-    		FOREGROUND_RED |
-    		FOREGROUND_INTENSITY);
+		SetConsoleTextAttribute(h,BACKGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
         printf("\n      							DYNAMIC PHONE BOOK / CONTACT MANAGER     \n\n");
-        SetConsoleTextAttribute(h,
-            BACKGROUND_GREEN);
+        SetConsoleTextAttribute(h, BACKGROUND_GREEN);
         printf("								1.Add Contact\n");
         printf("								2.Display Contacts\n");
         printf("								3.Search Contact (By ID)\n");
@@ -915,6 +906,7 @@ int main()
 
             case 7:
                 freeMemory();
+                system("pause");
                 printf("\n								Thank You for Using Phone Book!\n\n");
                 exit(0);
                 break;
