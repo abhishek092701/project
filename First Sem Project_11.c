@@ -236,11 +236,13 @@ int validPhone(int index)
 {
 	int len,valid,i;
 	fflush(stdin);
+	char oldPhone[50];
+	strcpy(oldPhone, C[index].phone);
 	do
 	{
     	valid=1;
     	fflush(stdin);
-    	printf("\n								Current Phone     : %s\n", C[index].phone);    	
+    	printf("\n								Current Phone     : %s\n", oldPhone);    	
     	printf("\n								Enter New Phone   : ");
     	scanf("%s", C[index].phone);
     	fflush(stdin);
@@ -264,22 +266,42 @@ int validPhone(int index)
             	valid=0;
         	}
     	}
-        /*if(valid)
-		{
-    		for(i=0; i<count; i++)
-    		{
-        		if(strcmp(C[index].phone, C[i].phone) == 0)
-        		{
-            		valid=0;
-            		printf("\n\n								Phone number already exists!\n\n");
-            		break;
-        		}
-    		}
-		}
-    	if(!valid)
-    	{
-        	printf("						Invalid phone number! Enter a valid 10-digit number starting with 98 or 97.\n\n");
-    	}*/
+        if(valid)
+        {
+            int duplicate=0;
+            if(strcmp(C[index].phone, oldPhone)==0)
+            {
+                duplicate=1;
+            }
+            else
+            {
+                for(i=0; i<count; i++)
+                {
+                    if(i!=index &&
+                       strcmp(C[index].phone, C[i].phone)==0)
+                    {
+                        duplicate=1;
+                        break;
+                    }
+                }
+            }
+            if(duplicate)
+            {
+                valid=0;
+                printf("\n								Phone number already exists!\n\n");
+            }
+            else
+            {
+                break;
+            }
+        }
+        if(!valid)
+        {
+            if(strcmp(C[index].phone, oldPhone)!=0)
+            {
+                printf("				Invalid phone number! Enter a valid 10-digit number starting with 98 or 97.\n\n");
+            }
+        }
 	} while(!valid);
 	return 1;
 }
@@ -292,6 +314,8 @@ int validEmail(int index)
 	int lastDot;
 	int leng;
 	fflush(stdin);
+	char oldEmail[50];
+    strcpy(oldEmail, C[index].email);
 	do
 	{
     	Valid=1;
@@ -299,7 +323,7 @@ int validEmail(int index)
     	atPos=-1;
     	lastDot=-1;
     	fflush(stdin);
-    	printf("\n								Current Email     : %s\n",C[index].email);
+    	printf("\n								Current Email     : %s\n",oldEmail);
     	printf("\n								Enter New Email   : ");
     	scanf("%s", C[index].email);
     	fflush(stdin);
@@ -398,26 +422,46 @@ int validEmail(int index)
     	{
         	Valid=0;
     	}
-    	/*if(Valid)
-    	{
-        	for(i=0; i<count; i++)
-        	{
-            	if(strcmp(C[index].email, C[i].email)==0)
-            	{
-                	Valid=0;
-                	printf("\n								Email already exists!\n\n");
-                	break;
-            	}
-       	 	}
-    	}
-    	if(!Valid)
-    	{
-        	printf("\n								Invalid Email Format!\n");
-        	printf("								Examples:\n");
-        	printf("									-abc@gmail.com\n");
-        	printf("									-ram123@yahoo.com\n");
-        	printf("									-ram.shrestha@college.edu.np\n\n");
-    	}*/
+        if(Valid)
+        {
+            int duplicate=0;
+            if(strcmp(C[index].email, oldEmail)==0)
+            {
+                duplicate=1;
+            }
+            else
+            {
+                for(i=0;i<count;i++)
+                {
+                    if(i!=index &&
+                       strcmp(C[index].email,C[i].email)==0)
+                    {
+                        duplicate=1;
+                        break;
+                    }
+                }
+            }
+            if(duplicate)
+            {
+                Valid=0;
+                printf("\n								Email already exists!\n\n");
+            }
+            else
+            {
+                break;
+            }
+        }
+        if(!Valid)
+        {
+            if(strcmp(C[index].email, oldEmail)!=0)
+            {
+                printf("								Invalid Email Format!\n");
+                printf("								Examples:\n");
+                printf("									abc@gmail.com\n");
+                printf("									ram123@yahoo.com\n");
+                printf("									ram.shrestha@college.edu.np\n\n");
+            }
+        }
 	} while(!Valid);
 	return 1;
 }
@@ -594,7 +638,14 @@ void addContact()
 		}
     	if(!valid)
     	{
-        	printf("						Invalid phone number! Enter a valid 10-digit number starting with 98 or 97.\n\n");
+    		if(i<count)
+    		{
+    			printf("\n						Phone number already exists! Please enter a different phone number.\n\n");
+			}
+			else
+			{
+				printf("						Invalid phone number! Enter a valid 10-digit number starting with 98 or 97.\n\n");
+			}	
     	}
 	} while(!valid);
 
@@ -721,11 +772,18 @@ void addContact()
     	}
     	if(!Valid)
     	{
-        	printf("\n								Invalid Email Format!\n");
-        	printf("								Examples:\n");
-        	printf("									-abc@gmail.com\n");
-        	printf("									-ram123@yahoo.com\n");
-        	printf("									-ram.shrestha@college.edu.np\n\n");
+    		if(i<count)
+    		{
+    			printf("\n								Email already exists! Please enter a different email.\n\n");
+			}
+			else
+			{
+				printf("\n								Invalid Email Format!\n");
+        		printf("								Examples:\n");
+        		printf("									-abc@gmail.com\n");
+        		printf("									-ram123@yahoo.com\n");
+        		printf("									-ram.shrestha@college.edu.np\n\n");
+			}
     	}
 	} while(!Valid);
 
@@ -790,7 +848,7 @@ void displayContacts()
         printf("\n								No Contacts Available!\n\n");
         return;
     }
-    SetConsoleTextAttribute(h,BACKGROUND_GREEN | FOREGROUND_RED |FOREGROUND_INTENSITY);
+    SetConsoleTextAttribute(h,BACKGROUND_GREEN | FOREGROUND_BLUE |FOREGROUND_INTENSITY);
     printf("\n\n\n        								CONTACT LISTS        \n");
     SetConsoleTextAttribute(h,BACKGROUND_GREEN);
     printf("\n					%-6s %-25s %-15s %-35s %-30s\n","ID", "NAME", "PHONE", "EMAIL", "ADDRESS\n");
@@ -957,8 +1015,8 @@ void deleteContact()
     		saveContacts();
 			return;
 		}
-    }
-    printf("\n								Contact Not Found!\n\n");
+	}
+	printf("\n								Contact Not Found!\n\n");
 }
 
 void sortContacts()
@@ -983,6 +1041,7 @@ void sortContacts()
         }
     }
     printf("\n								Contacts Sorted Alphabetically!\n\n");
+    saveContacts();
 }
 
 void saveContacts()
@@ -1039,130 +1098,135 @@ int main()
 {
 	HANDLE h=GetStdHandle(STD_OUTPUT_HANDLE);
     int choice;
-    int loging=0;
-	while(!loging)
-	{
-    	int ch;
-    	system("color 0F");
-    	system("cls");
-    	SetConsoleTextAttribute(h, 1);
-    	printf("\n									LOGIN SYSTEM				\n\n");
-    	SetConsoleTextAttribute(h, 15);
-    	printf("									1. Login\n");
-    	printf("									2. Sign Up\n");
-    	printf("									3. Delete Account\n");
-    	printf("									4. Exit\n");
-		int check;
-		do
-		{
-    		printf("\n									Enter Choice : ");
-			check=scanf("%d", &ch);
-			if(check!=1)
-    		{
-        		printf("\n							Invalid Input! Please enter numbers only.\n");
-				while(getchar()!='\n');
-    		}
-    		else if(ch<1 || ch>4)
-    		{
-        		printf("\n							Invalid Choice! Please enter between 1 and 4.\n");
-    		}
-		}while(check!=1 || ch<1 || ch>4);
-    	switch(ch)
-    	{
-        	case 1:
-            	loging=login();
-            	break;
-
-        	case 2:
-            	signup();
-            	break;
-
-            case 3:
-            	deleteAccount();
-            	break;
-
-        	case 4:
-           		exit(0);
-
-        	default:
-            	printf("\n\n							Invalid Choice!\n");
-            	system("pause");
-    	}
-	}
-    system("color 2F");
-    loadContacts();
-    do
+    while(1)
     {
-    	system("cls");
-		SetConsoleTextAttribute(h,BACKGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
-        printf("\n      							DYNAMIC PHONE BOOK / CONTACT MANAGER     \n\n");
-        SetConsoleTextAttribute(h, BACKGROUND_GREEN);
-        printf("								1.Add Contact\n");
-        printf("								2.Display Contacts\n");
-        printf("								3.Search Contact (By ID)\n");
-        printf("								4.Edit Contact\n");
-        printf("								5.Delete Contact\n");
-        printf("								6.Sort Contacts\n");
-        printf("								7.Exit\n\n");
-		int valid;
-		do
+    	int loging=0;
+    	while(!loging)
 		{
-    		valid=1;
-			printf("								Enter Choice : ");
-			if(scanf("%d", &choice)!= 1)
+    		int ch;
+    		system("color 0F");
+    		system("cls");
+    		SetConsoleTextAttribute(h, 1);
+    		printf("\n									LOGIN SYSTEM				\n\n");
+    		SetConsoleTextAttribute(h, 15);
+    		printf("									1. Login\n");
+    		printf("									2. Sign Up\n");
+    		printf("									3. Delete Account\n");
+    		printf("									4. Exit\n");
+			int check;
+			do
+			{
+    			printf("\n									Enter Choice : ");
+				check=scanf("%d", &ch);
+				if(check!=1)
+    			{
+        			printf("\n							Invalid Input! Please enter numbers only.\n");
+					while(getchar()!='\n');
+    			}
+    			else if(ch<1 || ch>4)
+    			{
+        			printf("\n							Invalid Choice! Please enter between 1 and 4.\n");
+    			}
+			}while(check!=1 || ch<1 || ch>4);
+    		switch(ch)
     		{
-        		valid=0;
-				printf("\n\n							Invalid Input! Please enter numbers only.\n");
-				while(getchar()!='\n');
+        		case 1:
+            		loging=login();
+            		break;
+
+        		case 2:
+            		signup();
+            		break;
+
+            	case 3:
+            		deleteAccount();
+            		break;
+
+        		case 4:
+           			exit(0);
+
+        		default:
+            		printf("\n\n							Invalid Choice!\n");
+            		system("pause");
     		}
-    		else if(choice<1 || choice>7)
-    		{
-        		valid=0;
-				printf("\n								Invalid Choice! Please enter between 1 and 7.\n");
-    		}
-		}while(!valid);
-        switch(choice)
-        {
-            case 1:
-                addContact();
-                system("pause");
-                break;
+		}
+    	system("color 2F");
+    	loadContacts();
+    	do
+    	{
+    		system("cls");
+			SetConsoleTextAttribute(h,BACKGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
+        	printf("\n      							DYNAMIC PHONE BOOK / CONTACT MANAGEMENT SYSTEM     \n\n");
+        	SetConsoleTextAttribute(h, BACKGROUND_GREEN);
+        	printf("								1.Add Contact\n");
+        	printf("								2.Display Contacts\n");
+        	printf("								3.Search Contact (By ID)\n");
+        	printf("								4.Edit Contact\n");
+        	printf("								5.Delete Contact\n");
+        	printf("								6.Sort Contacts\n");
+        	printf("								7.Exit\n\n");
+			int valid;
+			do
+			{
+    			valid=1;
+				printf("								Enter Choice : ");
+				if(scanf("%d", &choice)!= 1)
+    			{
+        			valid=0;
+					printf("\n\n							Invalid Input! Please enter numbers only.\n");
+					while(getchar()!='\n');
+    			}
+    			else if(choice<1 || choice>7)
+    			{
+        			valid=0;
+					printf("\n								Invalid Choice! Please enter between 1 and 7.\n");
+    			}
+			}while(!valid);
+        	switch(choice)
+        	{
+            	case 1:
+                	addContact();
+                	system("pause");
+                	break;
 
-            case 2:
-                displayContacts();
-                system("pause");
-                break;
+            	case 2:
+                	displayContacts();
+                	system("pause");
+                	break;
 
-            case 3:
-                searchContact();
-                system("pause");
-                break;
+            	case 3:
+                	searchContact();
+                	system("pause");
+                	break;
 
-            case 4:
-                editContact();
-                system("pause");
-                break;
+            	case 4:
+                	editContact();
+                	system("pause");
+                	break;
 
-            case 5:
-                deleteContact();
-                system("pause");
-                break;
+           		case 5:
+                	deleteContact();
+                	system("pause");
+                	break;
 
-            case 6:
-                sortContacts();
-                system("pause");
-                break;
+            	case 6:
+                	sortContacts();
+                	system("pause");
+                	break;
 
-            case 7:
-                freeMemory();
-                system("pause");
-                printf("\n								Thank You for Using Phone Book!\n\n");
-                exit(0);
-                break;
-            default:
-                printf("\n								Invalid Choice!\n\n");
-        }
-    }
-	while(choice!=8);
-    return 0;
+            	case 7:
+                	freeMemory();
+    				C=NULL;
+    				count=0;
+    				printf("\n								Returning to Login System...\n");
+    				system("pause");
+    				break;
+    				
+            	default:
+                	printf("\n								Invalid Choice!\n\n");
+        	}
+    	}
+		while(choice!=7);	
+	}
+	return 0;
 }
